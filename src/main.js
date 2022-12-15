@@ -5,11 +5,15 @@ import "./main.css";
 import App from "./App.vue";
 import SignUp from "./pages/SignUp.vue";
 import Success from "./pages/Success.vue";
+import { NavigationService } from "./service/NavigationService";
 
 const routes = [
   {
     path: "/",
     component: SignUp,
+    props: () => ({
+      navigationService: new NavigationService(router)
+    })
   },
   { path: "/success", component: Success },
 ];

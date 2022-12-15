@@ -5,11 +5,7 @@
       <p>Enter your email address to create an account.</p>
 
       <EmailField id="email" label-text="Your email" v-model="email" />
-      <PasswordField
-        id="password"
-        label-text="Your password"
-        v-model="password"
-      />
+      <PasswordField id="password" label-text="Your password" v-model="password" />
       <p v-if="errorMessage">{{ translateError(errorMessage) }}</p>
       <Button title="Signup" />
     </form>
@@ -17,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import Title from "../components/Title.vue";
 import EmailField from "../components/EmailField.vue";
@@ -25,11 +21,15 @@ import PasswordField from "../components/PasswordField.vue";
 import Button from "../components/Button.vue";
 import { translateError } from "../utils/translateError.js";
 
-const router = useRouter();
-
 const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
+const props = defineProps(["navigationService"]);
+
+watchEffect(() => {
+  console.log(email.value);
+  console.log(password.value);
+});
 
 function onSubmit() {
   fetch("https://backend-login-placeholder.deno.dev/api/users", {
@@ -46,7 +46,9 @@ function onSubmit() {
       }
     })
     .then(() => {
-      router.push("/success");
+      // router.push("/success");
+      console.log("success");
+      props.navigationService.navigation();
     })
     .catch((error) => {
       errorMessage.value = error.message;
